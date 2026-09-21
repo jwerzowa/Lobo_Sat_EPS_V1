@@ -1,0 +1,564 @@
+
+(kicad_symbol_lib (version 20211014) (generator kicad_symbol_editor)
+  (symbol "LMZM33602RLRR" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
+    (property "Reference" "U" (id 0) (at -15.2666 13.9943 0)
+      (effects (font (size 1.27 1.27)) (justify bottom left))
+    )
+    (property "Value" "LMZM33602RLRR" (id 1) (at -15.2684 -162.5884 0)
+      (effects (font (size 1.27 1.27)) (justify bottom left))
+    )
+    (property "Footprint" "LMZM33602RLRR:VREG_LMZM33602RLRR" (id 2) (at 0 0 0)
+      (effects (font (size 1.27 1.27)) (justify bottom) hide)
+    )
+    (property "PARTREV" "C" (id 4) (at 0 0 0)
+      (effects (font (size 1.27 1.27)) (justify bottom) hide)
+    )
+    (property "MANUFACTURER" "TEXAS INSTRUMENTS" (id 5) (at 0 0 0)
+      (effects (font (size 1.27 1.27)) (justify bottom) hide)
+    )
+    (property "STANDARD" "MANUFACTURER RECOMMENDATIONS" (id 6) (at 0 0 0)
+      (effects (font (size 1.27 1.27)) (justify bottom) hide)
+    )
+    (symbol "LMZM33602RLRR_0_0"
+      (rectangle (start -15.24 -160.02) (end 15.24 12.7)
+        (stroke (width 0.254)) (fill (type background))
+      )
+      (pin power_in line (at 20.32 -63.5 180.0) (length 5.08)
+        (name "AGND"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "1"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -66.04 180.0) (length 5.08)
+        (name "PGND"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "5"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin input line (at -20.32 7.62 0) (length 5.08)
+        (name "VIN"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "4"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin input line (at -20.32 2.54 0) (length 5.08)
+        (name "RT"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "3"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin input line (at -20.32 0.0 0) (length 5.08)
+        (name "FB"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "16"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin input line (at -20.32 5.08 0) (length 5.08)
+        (name "EN/SYNC"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "2"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 7.62 180.0) (length 5.08)
+        (name "VOUT"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "6"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -48.26 180.0) (length 5.08)
+        (name "SW"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "9"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin open_collector line (at 20.32 -55.88 180.0) (length 5.08)
+        (name "PGOOD"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "17"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 5.08 180.0) (length 5.08)
+        (name "VOUT__1"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "7"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 2.54 180.0) (length 5.08)
+        (name "VOUT__2"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "8"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 0.0 180.0) (length 5.08)
+        (name "VOUT__3"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT1"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -2.54 180.0) (length 5.08)
+        (name "VOUT__4"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT2"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -5.08 180.0) (length 5.08)
+        (name "VOUT__5"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT3"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -7.62 180.0) (length 5.08)
+        (name "VOUT__6"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT4"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -10.16 180.0) (length 5.08)
+        (name "VOUT__7"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT5"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -12.7 180.0) (length 5.08)
+        (name "VOUT__8"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT6"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -15.24 180.0) (length 5.08)
+        (name "VOUT__9"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT7"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -17.78 180.0) (length 5.08)
+        (name "VOUT__10"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT8"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -20.32 180.0) (length 5.08)
+        (name "VOUT__11"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT9"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -22.86 180.0) (length 5.08)
+        (name "VOUT__12"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT10"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -25.4 180.0) (length 5.08)
+        (name "VOUT__13"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT11"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -27.94 180.0) (length 5.08)
+        (name "VOUT__14"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT12"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -30.48 180.0) (length 5.08)
+        (name "VOUT__15"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT13"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -33.02 180.0) (length 5.08)
+        (name "VOUT__16"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT14"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -35.56 180.0) (length 5.08)
+        (name "VOUT__17"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT15"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -38.1 180.0) (length 5.08)
+        (name "VOUT__18"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT16"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -40.64 180.0) (length 5.08)
+        (name "VOUT__19"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT17"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -43.18 180.0) (length 5.08)
+        (name "VOUT__20"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT18"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -45.72 180.0) (length 5.08)
+        (name "VOUT__21"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "VOUT19"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -50.8 180.0) (length 5.08)
+        (name "SW__1"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "10"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin output line (at 20.32 -53.34 180.0) (length 5.08)
+        (name "SW__2"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "11"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -68.58 180.0) (length 5.08)
+        (name "PGND__1"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "14"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -71.12 180.0) (length 5.08)
+        (name "PGND__2"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "15"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -73.66 180.0) (length 5.08)
+        (name "PGND__3"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "18"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -76.2 180.0) (length 5.08)
+        (name "PGND__4"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND1"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -78.74 180.0) (length 5.08)
+        (name "PGND__5"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND2"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -81.28 180.0) (length 5.08)
+        (name "PGND__6"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND3"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -83.82 180.0) (length 5.08)
+        (name "PGND__7"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND4"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -86.36 180.0) (length 5.08)
+        (name "PGND__8"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND5"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -88.9 180.0) (length 5.08)
+        (name "PGND__9"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND6"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -91.44 180.0) (length 5.08)
+        (name "PGND__10"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND7"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -93.98 180.0) (length 5.08)
+        (name "PGND__11"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND8"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -96.52 180.0) (length 5.08)
+        (name "PGND__12"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND9"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -99.06 180.0) (length 5.08)
+        (name "PGND__13"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND10"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -101.6 180.0) (length 5.08)
+        (name "PGND__14"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND11"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -104.14 180.0) (length 5.08)
+        (name "PGND__15"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND12"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -106.68 180.0) (length 5.08)
+        (name "PGND__16"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND13"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -109.22 180.0) (length 5.08)
+        (name "PGND__17"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND14"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -111.76 180.0) (length 5.08)
+        (name "PGND__18"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND15"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -114.3 180.0) (length 5.08)
+        (name "PGND__19"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND16"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -116.84 180.0) (length 5.08)
+        (name "PGND__20"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND17"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -119.38 180.0) (length 5.08)
+        (name "PGND__21"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND18"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -121.92 180.0) (length 5.08)
+        (name "PGND__22"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND19"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -124.46 180.0) (length 5.08)
+        (name "PGND__23"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND20"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -127.0 180.0) (length 5.08)
+        (name "PGND__24"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND21"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -129.54 180.0) (length 5.08)
+        (name "PGND__25"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND22"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -132.08 180.0) (length 5.08)
+        (name "PGND__26"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND23"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -134.62 180.0) (length 5.08)
+        (name "PGND__27"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND24"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -137.16 180.0) (length 5.08)
+        (name "PGND__28"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND25"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -139.7 180.0) (length 5.08)
+        (name "PGND__29"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND26"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -142.24 180.0) (length 5.08)
+        (name "PGND__30"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND27"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -144.78 180.0) (length 5.08)
+        (name "PGND__31"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND28"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -147.32 180.0) (length 5.08)
+        (name "PGND__32"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND29"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -149.86 180.0) (length 5.08)
+        (name "PGND__33"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND30"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -152.4 180.0) (length 5.08)
+        (name "PGND__34"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND31"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (pin power_in line (at 20.32 -154.94 180.0) (length 5.08)
+        (name "PGND__35"
+          (effects (font (size 1.016 1.016)))
+        )
+        (number "PGND32"
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+    )
+  )
+)
