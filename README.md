@@ -7,7 +7,7 @@ Goal: solar-powered, solderability (Hand solder and hotplate), provide 3V3 and 5
 ## What it does
 
 - Takes power from 12x Anysolar SM141K10TF solar cells
-- Charges a LG MJ1 18650 pack through an LT3652 MPPT charger (currently 1S2P, but will likely move to (2S2P)
+- Charges a LG MJ1 18650 pack through an LT3652 MPPT charger (2S2P)
 - Protects the battery with S-8252 and the BQ29209
 - Regulates the battery bus down to two separate rails using LMZM33602 buck modules: 3V3 and 5V.
 - Reports battery/solar current and temp using the INA228
@@ -15,7 +15,7 @@ Goal: solar-powered, solderability (Hand solder and hotplate), provide 3V3 and 5
 
 ## Status
 
-Actively working through the schematic in KiCad. Charger stage (LT3652 + MPPT dividers + protection passives) is basically done, just cleaning up a few net labels and double-checking component values and orientations. Will likely need to change out components from our BOM given the schematic. 
+Actively working through the schematic in KiCad. Solar + LT3652 + MPPT dividers + protection passives are basically done. Actice work on the battery protect ICs and power conversion 
 
 ## Parts list
 
