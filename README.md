@@ -15,7 +15,7 @@ Goal: solar-powered, solderability (Hand solder and hotplate), provide 3V3 and 5
 
 ## Status
 
-Actively working through the schematic in KiCad. Solar + LT3652 + MPPT dividers + protection passives are basically done. Actice work on the battery protect ICs and power conversion 
+Actively working through the schematic in KiCad. Solar + LT3652 + MPPT dividers + protection passives are basically done. Now working on the battery protection ICs and power conversion components of the schematic
 
 ## Parts list
 
