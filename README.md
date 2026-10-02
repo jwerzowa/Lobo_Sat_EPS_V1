@@ -10,7 +10,7 @@ Goal: solar-powered, solderability (Hand solder and hotplate), provide 3V3 and 5
 - Charges a LG MJ1 18650 pack through an LT3652 MPPT charger (currently 1S2P, but will likely move to (2S2P)
 - Protects the battery with S-8252 and the BQ29209
 - Regulates the battery bus down to two separate rails using LMZM33602 buck modules: 3V3 and 5V.
-- Reports battery/solar current and temp back over I2C
+- Reports battery/solar current and temp using the INA228
 - Has an RBF switch (SS-5GL), which is mandated for cubesats in orbit, will need to work on chassis column depression switch for deployment in orbit.
 
 ## Status
