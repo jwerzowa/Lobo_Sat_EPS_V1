@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate the hierarchical LOBOSAT EPS schematic from the tables in this file.
 
-    python3 scripts/gen_schematic.py          # writes EPS_Lobosat_V1.kicad_sch, sheets/*.kicad_sch,
-                                              # expected_nets.json
+    python3 scripts/gen_schematic.py          # writes EPS_Lobosat_V1.kicad_sch (one flat sheet)
+                                              # and expected_nets.json
 
 Every part is described as `ref, symbol, value, {pin: net}`. Pins are matched by number,
 then by name, then by a trailing-`*` name prefix (for the LMZM33602's stacked pads).
@@ -30,14 +30,7 @@ SCH_VERSION = "20260306"
 ROOT_UUID = new_uuid("root")
 GRID = 2.54
 
-# Nets that cross sheets -> global labels. GND -> power:GND symbol. Everything else -> local label.
-GLOBAL_NETS = {
-    "VSOLAR", "VBUS", "VBUS_SW", "BAT_MID", "RAIL_A", "RAIL_B",
-    "EN_VID", "EN_TLM", "EN_COM", "FLT_VID_N", "FLT_TLM_N", "FLT_COM_N",
-    "CHG_SHDN", "CHG_OVP", "CHG_STAT_N", "CHG_FAULT_N", "NTC_BAT",
-    "I2C_SDA", "I2C_SCL", "ADC_ALERT_N", "INA_ALERT_N", "HEATER_EN",
-    "PG_RAIL_A", "PG_RAIL_B", "PWR_VID", "PWR_TLM", "PWR_COM",
-}
+# Single flat sheet: every net is a local label, GND uses the power:GND symbol.
 
 R0603, C0603 = "Resistor_SMD:R_0603_1608Metric", "Capacitor_SMD:C_0603_1608Metric"
 C1206, C1210 = "Capacitor_SMD:C_1206_3216Metric", "Capacitor_SMD:C_1210_3225Metric"
@@ -59,7 +52,7 @@ class Part:
         self.desc, self.ds = desc, ds
 
 
-class Sheet:
+class Block:
     def __init__(self, name, title, base, notes):
         self.name, self.title, self.base, self.notes = name, title, base, notes
         self.parts, self.flags, self._n = [], [], {}
@@ -84,11 +77,11 @@ class Sheet:
         return self.add("C", "Device:C", value, {"1": a, "2": b}, fp=fp, **kw)
 
 
-def build_sheets():
+def build_blocks():
     S = []
 
     # ---------------------------------------------------------------- solar_input
-    s = Sheet("solar_input", "Solar input + surge / backfeed protection", 100, [
+    s = Block("solar_input", "Solar input + surge / backfeed protection", 100, [
         "Panel string -> TVS clamp -> SS34 blocking diode -> VSOLAR (charger input).",
         "Open: string Voc must stay below 15 V for SMBJ15A (docs/06 #2). Connector type TBD (#8).",
         "FIXED vs old schematic: TVS was reversed (cathode on GND) and would have shorted the panel.",
@@ -102,7 +95,7 @@ def build_sheets():
     S.append(s)
 
     # ---------------------------------------------------------------- charger
-    s = Sheet("charger", "LT3652 solar MPPT charger (2S, 8.4 V float)", 200, [
+    s = Block("charger", "LT3652 solar MPPT charger (2S, 8.4 V float)", 200, [
         "Charge current = 100 mV / R_SENSE = 2 A with 50 mOhm (verify against LT3652 datasheet).",
         "VFB divider 154k/100k: 3.3 V x (1 + 154/100) = 8.38 V float. Verify the datasheet's bias-current",
         "  correction (LT3652 datasheet could not be downloaded automatically - put 3652fe.pdf in datasheets/).",
@@ -144,7 +137,7 @@ def build_sheets():
     S.append(s)
 
     # ---------------------------------------------------------------- battery
-    s = Sheet("battery", "2S2P pack on Keystone clips + protection + current monitor", 300, [
+    s = Block("battery", "2S2P pack on Keystone clips + protection + current monitor", 300, [
         "Ground reference: S-8252 and BQ29209 sit on BAT_N (cell negative). Everything else is on GND (P-).",
         "Only the FS8205A joins BAT_N and GND. FET1 (G1) = discharge, FET2 (G2) = charge.",
         "Per-cell fuses F301-F304 are FITTED, not DNP: DNP would open each cell. Use 0 Ohm 1206 if unwanted.",
@@ -202,7 +195,7 @@ def build_sheets():
     S.append(s)
 
     # ---------------------------------------------------------------- launch_inhibit
-    s = Sheet("launch_inhibit", "Launch inhibit / RBF", 400, [
+    s = Block("launch_inhibit", "Launch inhibit / RBF", 400, [
         "Gate pulled up to VBUS = FET off by default. Switch NC contact closes INH_GATE -> GND when the",
         "  lever is released (deployed) = FET on. Stowed / RBF inserted = lever pressed = NC open = off.",
         "SS-5GL has SOLDER terminals; for PCB mounting consider SS-5GLD. No footprint yet (MISSING_PARTS).",
@@ -219,7 +212,7 @@ def build_sheets():
     S.append(s)
 
     # ---------------------------------------------------------------- regulation
-    s = Sheet("regulation", "Rail A 3.3 V / Rail B 5 V (2x LMZM33602)", 500, [
+    s = Block("regulation", "Rail A 3.3 V / Rail B 5 V (2x LMZM33602)", 500, [
         "Values from LMZM33602 datasheet Table 7-1 (RFBB = 10k): 3.3 V -> RFBT 23.2k, CFF 150 pF,",
         "  RT 133k (300 kHz), COUT >= 88 uF; 5 V -> RFBT 40.2k, CFF 100 pF, RT 88.7k (450 kHz), COUT >= 66 uF.",
         "AGND must NOT be tied to PGND externally (datasheet 5): each module has its own AGND net.",
@@ -246,7 +239,7 @@ def build_sheets():
     S.append(s)
 
     # ---------------------------------------------------------------- load_switches
-    s = Sheet("load_switches", "Subsystem load switches (3x TPS2553)", 600, [
+    s = Block("load_switches", "Subsystem load switches (3x TPS2553)", 600, [
         "TPS2553 (not -1): EN active HIGH, auto-retry. 100k EN pull-downs keep loads off until the MCU says so.",
         "ILIM resistors TBD (docs/06 #5): 15k..232k, see TPS2553 datasheet Fig. 23.",
         "Output caps 10 uF chosen (datasheet: 0.1 uF min on IN; output cap per load).",
@@ -265,7 +258,7 @@ def build_sheets():
     S.append(s)
 
     # ---------------------------------------------------------------- telemetry
-    s = Sheet("telemetry", "Telemetry: ADS1015 + MCU / OBC interface", 700, [
+    s = Block("telemetry", "Telemetry: ADS1015 + MCU / OBC interface", 700, [
         "ADS1015 at 0x48 (ADDR = GND), VDD = RAIL_A 3.3 V. Use FSR +/-4.096 V; inputs must stay <= VDD.",
         "AIN0 VSOLAR x 47/377 (15 V -> 1.87 V, TVS clamp 24 V -> 3.0 V)   AIN1 VBUS x 1/3 (8.4 V -> 2.8 V)",
         "AIN2 BAT_MID x 1/2 (4.2 V -> 2.1 V)   AIN3 NTC_BAT. Battery current/voltage come from the INA228.",
@@ -302,7 +295,7 @@ def build_sheets():
     S.append(s)
 
     # ---------------------------------------------------------------- heater
-    s = Sheet("heater", "Battery heater (optional, all DNP)", 800, [
+    s = Block("heater", "Battery heater (optional, all DNP)", 800, [
         "All parts DNP until the heater decision (docs/06 #6). Thresholds TBD.",
         "Heater ON = (too cold OR HEATER_EN) AND NOT too hot.",
         "  U801A: NTC node above V_COLD -> output released -> D801 pulls the gate up.",
@@ -472,30 +465,29 @@ class Writer:
                     val_at=(x, y + 3.81 if rot == 0 and name == "GND" else y - 3.81))
 
     def label(self, net, x, y, angle):
-        uid = Q(new_uuid(f"{self.path}/lbl/{net}/{x}/{y}"))
         just = "right" if angle in (180, 270) else "left"
-        if net in GLOBAL_NETS:
-            self.items.append(["global_label", Q(net), ["shape", "passive"],
-                               ["at", fmt(x), fmt(y), str(angle)], ["fields_autoplaced", "yes"],
-                               font(just), ["uuid", uid],
-                               ["property", Q("Intersheetrefs"), Q("${INTERSHEET_REFS}"),
-                                ["at", fmt(x), fmt(y), str(angle)], font(just, hide=True)]])
-        else:
-            self.items.append(["label", Q(net), ["at", fmt(x), fmt(y), str(angle)],
-                               font(just + " bottom"), ["uuid", uid]])
+        self.items.append(["label", Q(net), ["at", fmt(x), fmt(y), str(angle)],
+                           font(just + " bottom"), ["uuid", Q(new_uuid(f"{self.path}/lbl/{net}/{x}/{y}"))]])
+
+    def rect(self, x0, y0, x1, y1):
+        self.items.append(["rectangle", ["start", fmt(x0), fmt(y0)], ["end", fmt(x1), fmt(y1)],
+                           ["stroke", ["width", "0.254"], ["type", "dash"]], ["fill", ["type", "none"]],
+                           ["uuid", Q(new_uuid(f"{self.path}/rect/{x0}/{y0}"))]])
 
     def no_connect(self, x, y):
         self.items.append(["no_connect", ["at", fmt(x), fmt(y)],
                            ["uuid", Q(new_uuid(f"{self.path}/nc/{x}/{y}"))]])
 
-    def text(self, s, x, y):
+    def text(self, s, x, y, size=1.27):
+        eff = ["effects", ["font", ["size", fmt(size), fmt(size)]] + ([["bold", "yes"]] if size > 1.27 else []),
+               ["justify", "left", "top"]]
         self.items.append(["text", Q(s), ["exclude_from_sim", "no"], ["at", fmt(x), fmt(y), "0"],
-                           font("left top"), ["uuid", Q(new_uuid(f"{self.path}/txt/{x}/{y}"))]])
+                           eff, ["uuid", Q(new_uuid(f"{self.path}/txt/{x}/{y}"))]])
 
     def file(self, sheet_uuid, paper, title, extra_tail=()):
         lib = ["lib_symbols"] + [flat_symbol(i) for i in self.lib_ids]
         return (["kicad_sch", ["version", SCH_VERSION], ["generator", Q("eeschema")],
-                 ["generator_version", Q("10.0")], ["uuid", Q(sheet_uuid)], ["paper", Q(paper)],
+                 ["generator_version", Q("10.0")], ["uuid", Q(sheet_uuid)], ["paper"] + paper,
                  ["title_block", ["title", Q(title)], ["company", Q("UNM Student Satellite Group - LOBOSAT")],
                   ["comment", "1", Q("Generated by scripts/gen_schematic.py - edit the script, not this file")]],
                  lib] + self.items + list(extra_tail) + [["embedded_fonts", "no"]])
@@ -527,14 +519,14 @@ def resolve_pins(part, sym):
 
 
 def label_width(net):
-    return len(net) * 1.1 + (5 if net in GLOBAL_NETS else 2)
+    return len(net) * 1.1 + 2
 
 
-def write_sheet(sheet, sheet_uuid, expected):
-    w = Writer(f"/{ROOT_UUID}/{sheet_uuid}", sheet.base * 10)
+def layout_block(sheet):
+    """Place a block's parts relative to its own top-left corner. Returns (placed, positions, w, h)."""
     placed = []
     for p in sheet.parts:
-        sym = w.use(p.lib_id)
+        sym = flat_symbol(p.lib_id)
         pins = resolve_pins(p, sym)
         x0, x1, y0, y1 = body_box(sym, p.unit)
         left = max([label_width(n) for (_, _, x, _, a, n) in pins if a == 0] + [3])
@@ -543,24 +535,31 @@ def write_sheet(sheet, sheet_uuid, expected):
         bot = max([label_width(n) for (_, _, x, _, a, n) in pins if a == 90] + [4])
         placed.append((p, sym, pins, (x0 - left, x1 + right, -y1 - top - 3, -y0 + bot + 3)))
 
-    # shelf packing, origin of each symbol snapped to the grid
-    width = 380 if sum((b[1] - b[0]) * (b[3] - b[2]) for *_, b in placed) < 60000 else 540
-    x, y, row_h = 20.0, 30.0 + 3.0 * len(sheet.notes), 0.0
+    # shelf packing inside the block, symbol origins snapped to the grid
+    width = 360 if sum((b[1] - b[0]) * (b[3] - b[2]) for *_, b in placed) < 60000 else 520
+    x, y, row_h, used_w = 5.0, 12.0 + 3.0 * len(sheet.notes), 0.0, 0.0
     positions = []
     for p, sym, pins, (bx0, bx1, by0, by1) in placed:
         wdt, hgt = bx1 - bx0 + 6, by1 - by0 + 4
-        if x + wdt > 20 + width:
-            x, y, row_h = 20.0, y + row_h, 0.0
-        positions.append((snap(x - bx0), snap(y - by0)))
+        if x + wdt > 5 + width:
+            x, y, row_h = 5.0, y + row_h, 0.0
+        positions.append((x - bx0, y - by0))
         x += wdt
+        used_w = max(used_w, x)
         row_h = max(row_h, hgt)
-    total_h = y + row_h + 15
-    paper = "A3" if width <= 380 and total_h <= 280 else ("A2" if total_h <= 400 and width <= 540 else "A1")
+    h = y + row_h + (15 if sheet.flags else 5)
+    return placed, positions, max(used_w, 200) + 5, h
 
+
+def place_block(w, sheet, layout, ox, oy, expected):
+    placed, positions, bw, bh = layout
+    w.rect(ox, oy, ox + bw, oy + bh)
+    w.text(sheet.title.upper(), ox + 5, oy + 3, size=2.54)
     for i, line in enumerate(sheet.notes):
-        w.text(line, 20, 22 + 3.0 * i)
+        w.text(line, ox + 5, oy + 9 + 3.0 * i)
 
-    for (p, sym, pins, (bx0, bx1, by0, by1)), (X, Y) in zip(placed, positions):
+    for (p, sym, pins, (bx0, bx1, by0, by1)), (rx, ry) in zip(placed, positions):
+        X, Y = snap(ox + rx), snap(oy + ry)
         props = [("Footprint", p.fp if p.fp is not None else str(prop(sym, "Footprint")[2] if prop(sym, "Footprint") else "")),
                  ("Datasheet", p.ds or (str(prop(sym, "Datasheet")[2]) if prop(sym, "Datasheet") else "~")),
                  ("Description", p.desc or (str(prop(sym, "Description")[2]) if prop(sym, "Description") else "")),
@@ -586,69 +585,66 @@ def write_sheet(sheet, sheet_uuid, expected):
             else:
                 w.label(net, sx, sy, LABEL_ANGLE[a])
 
-    # PWR_FLAGs in a row under the parts, each with a label (or GND symbol) on its pin
-    fx = 20.0
+    # PWR_FLAGs in a row at the bottom of the block, each with a label (or GND symbol) on its pin
+    fx, fy = snap(ox + 10), snap(oy + bh - 6)
     for net in sheet.flags:
-        fy = snap(total_h - 5)
-        w.power("power:PWR_FLAG", snap(fx), fy)
+        w.power("power:PWR_FLAG", fx, fy)
         if net == "GND":
-            w.power("power:GND", snap(fx), fy)
+            w.power("power:GND", fx, fy)
         else:
-            w.label(net, snap(fx), fy, 270)
-        fx += 25
-    tree = w.file(new_uuid(f"sheetfile/{sheet.name}"), paper, sheet.title)
-    (ROOT / "sheets").mkdir(exist_ok=True)
-    (ROOT / "sheets" / f"{sheet.name}.kicad_sch").write_text(dump(tree) + "\n", encoding="utf-8")
-    return paper
+            w.label(net, fx, fy, 270)
+        fx = snap(fx + 25)
 
 
-def write_root(sheets):
+NOTES = [
+    "LOBOSAT EPS - 2S2P Li-ion, solar charged. Single sheet; each box is one block. Same label text = same net.",
+    "Power path: SOLAR_IN -> TVS + SS34 -> VSOLAR -> LT3652 -> VBUS <- PTC <- shunt <- fuse <- BAT_P (2S2P)",
+    "  VBUS -> launch inhibit (AO3401A) -> VBUS_SW -> LMZM33602 x2 -> RAIL_A 3.3 V / RAIL_B 5 V -> TPS2553 x3",
+    "GND = P- (after the FS8205A cutoff FETs). BAT_N = cell negative (battery block only).",
+    "Reference designators: 1xx solar, 2xx charger, 3xx battery, 4xx inhibit, 5xx regulation, 6xx load switches,",
+    "  7xx telemetry, 8xx heater. Open items: docs/06_open_questions.md and MISSING_PARTS.md. TBD = not decided.",
+]
+CANVAS_W = 1100  # pack blocks left-to-right up to this width
+
+
+def write_flat(sheets, expected):
     w = Writer(f"/{ROOT_UUID}")
-    notes = [
-        "LOBOSAT EPS - 2S2P Li-ion, solar charged. One sheet per block; inter-sheet nets are global labels.",
-        "Power path: SOLAR_IN -> TVS + SS34 -> VSOLAR -> LT3652 -> VBUS <- PTC <- shunt <- fuse <- BAT_P (2S2P)",
-        "  VBUS -> launch inhibit (AO3401A) -> VBUS_SW -> LMZM33602 x2 -> RAIL_A 3.3 V / RAIL_B 5 V -> TPS2553 x3",
-        "GND = P- (after the FS8205A cutoff FETs). BAT_N = cell negative, battery sheet only.",
-        "Reference designators: 1xx solar, 2xx charger, 3xx battery, 4xx inhibit, 5xx regulation,",
-        "  6xx load switches, 7xx telemetry, 8xx heater.",
-        "Open items: docs/06_open_questions.md and MISSING_PARTS.md. Values marked TBD are not decided.",
-    ]
-    for i, line in enumerate(notes):
-        w.text(line, 20, 22 + 3.0 * i)
-    sheet_nodes = []
-    for i, s in enumerate(sheets):
-        uid = new_uuid(f"sheet/{s.name}")
-        x, y = 20 + (i % 4) * 95, 60 + (i // 4) * 45
-        sheet_nodes.append(
-            ["sheet", ["at", fmt(x), fmt(y)], ["size", "76.2", "25.4"], ["exclude_from_sim", "no"],
-             ["in_bom", "yes"], ["on_board", "yes"], ["dnp", "no"], ["fields_autoplaced", "yes"],
-             ["stroke", ["width", "0.1524"], ["type", "solid"]], ["fill", ["color", "0", "0", "0", "0.0000"]],
-             ["uuid", Q(uid)],
-             ["property", Q("Sheetname"), Q(s.name), ["at", fmt(x), fmt(y - 0.7116), "0"], font("left bottom")],
-             ["property", Q("Sheetfile"), Q(f"sheets/{s.name}.kicad_sch"), ["at", fmt(x), fmt(y + 26.0), "0"],
-              font("left top")],
-             ["instances", ["project", Q(PROJECT), ["path", Q(f"/{ROOT_UUID}"), ["page", Q(str(i + 2))]]]]])
-        w.text(s.title, x + 2, y + 10)
-    tail = [["sheet_instances", ["path", Q("/"), ["page", Q("1")]]]]
-    tree = w.file(ROOT_UUID, "A3", "LOBOSAT EPS - top level")
-    tree = tree[:-1] + sheet_nodes + tail + tree[-1:]
+    for i, line in enumerate(NOTES):
+        w.text(line, 20, 15 + 3.0 * i)
+    x, y, row_h, max_x = 20.0, 20.0 + 3.0 * len(NOTES) + 5, 0.0, 0.0
+    for s in sheets:
+        lay = layout_block(s)
+        bw, bh = lay[2], lay[3]
+        if x + bw > 20 + CANVAS_W:
+            x, y, row_h = 20.0, y + row_h + 10, 0.0
+        place_block(w, s, lay, snap(x), snap(y), expected)
+        print(f"  {s.name}: {len(s.parts)} symbols")
+        x += bw + 10
+        max_x, row_h = max(max_x, x), max(row_h, bh)
+    need_w, need_h = max_x + 15, y + row_h + 40
+    for name, (pw, ph) in (("A1", (841, 594)), ("A0", (1189, 841))):
+        if need_w <= pw and need_h <= ph:
+            paper = [Q(name)]
+            break
+    else:
+        paper = [Q("User"), fmt(snap(need_w)), fmt(snap(need_h))]
+    tree = w.file(ROOT_UUID, paper, "LOBOSAT EPS")
+    tree = tree[:-1] + [["sheet_instances", ["path", Q("/"), ["page", Q("1")]]]] + tree[-1:]
     (ROOT / f"{PROJECT}.kicad_sch").write_text(dump(tree) + "\n", encoding="utf-8")
+    return " ".join(str(v) for v in paper)
 
 
 def main():
-    sheets = build_sheets()
+    sheets = build_blocks()
     refs = [(p.ref, p.unit) for s in sheets for p in s.parts]
     dupes = {r for r in refs if refs.count(r) > 1}
     if dupes:
         raise SystemExit(f"duplicate references: {sorted(dupes)}")
     expected = {}
-    for s in sheets:
-        paper = write_sheet(s, new_uuid(f"sheet/{s.name}"), expected)
-        print(f"sheets/{s.name}.kicad_sch: {len(s.parts)} symbols, paper {paper}")
-    write_root(sheets)
+    paper = write_flat(sheets, expected)
     expected = {k: sorted(set(v)) for k, v in sorted(expected.items())}
     (ROOT / "expected_nets.json").write_text(json.dumps(expected, indent=1) + "\n", encoding="utf-8")
-    print(f"{PROJECT}.kicad_sch + expected_nets.json ({len(expected)} nets)")
+    print(f"{PROJECT}.kicad_sch (one sheet, paper {paper}) + expected_nets.json ({len(expected)} nets)")
 
 
 if __name__ == "__main__":

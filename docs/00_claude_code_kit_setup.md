@@ -23,7 +23,7 @@ Type the phases one at a time and review each result before moving on:
 ```
 /inventory          # read-only look at what you have
 /link-libraries     # symbol → footprint → 3D, writes LINK_REPORT.md and MISSING_PARTS.md
-/build-schematic    # generates the hierarchical schematic, one sheet at a time
+/build-schematic    # generates the schematic (one flat sheet), block by block
 /check              # ERC, netlist check, BOM, PDF
 ```
 

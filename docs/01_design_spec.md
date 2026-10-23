@@ -28,7 +28,7 @@ subsystems: **Videography, Telemetry, Comms**. Protection is layered:
 | `telemetry.kicad_sch` | Power monitoring + MCU interface | ADS1015, dividers, pull-ups, I²C/GPIO connector |
 | `heater.kicad_sch` | Optional battery heater | AO3400A, LM393, NTC, heater resistors |
 
-Sheet files live in `sheets/`. Root sheet `EPS_Lobosat_V1.kicad_sch` holds only the hierarchical sheet symbols and the
+**Single flat sheet (Julien's preference, 2026-10-23):** all blocks are on `EPS_Lobosat_V1.kicad_sch`, one dashed box per block. The table above lists blocks, not files. (Kit text, superseded: root sheet holds only the hierarchical sheet symbols and the
 connections between them.
 
 ## Electrical summary
@@ -71,7 +71,7 @@ connections between them.
 - Power nets: UPPERCASE with underscores (`VBUS`, `BAT_MID`, `RAIL_A`).
 - Active-low signals end in `_N` **only if** they are logic signals (`CHG_EN_N`).
   `BAT_N` is the pack negative (historic name, keep it).
-- Nets that cross sheets → **global labels** (simplest to generate and to verify).
+- One flat sheet → every net is a **local label**; same text = same net.
   Nets inside one sheet → **local labels** or wires.
 - `GND` uses the KiCad `power:GND` symbol everywhere. All other power nets use global labels
   so their names show up exactly as written in the netlist.

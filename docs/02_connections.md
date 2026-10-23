@@ -16,7 +16,7 @@ How to use this file:
 - Lines marked **[DS]** mean "follow the datasheet reference circuit exactly".
 - Lines marked **[TBD]** mean place the part, set Value = `TBD`, and list it in the summary.
 
-## Inter-sheet nets (global labels)
+## Nets shared between blocks
 
 | Net | Meaning | Sheets |
 |---|---|---|

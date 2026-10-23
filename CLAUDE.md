@@ -12,7 +12,7 @@ changed and why in short notes, and never hide a guess.
    parts already downloaded into `libs/`.
 2. **Report what's missing.** Anything not found or not linkable goes in `MISSING_PARTS.md`
    (template: `templates/MISSING_PARTS.md`). Do not invent parts to fill gaps.
-3. **Hook up the schematic.** Build the hierarchical schematic and connect every net described
+3. **Hook up the schematic.** Build the schematic (one flat sheet, Julien's preference) and connect every net described
    in `docs/02_connections.md`.
 4. **Prove it.** ERC clean (or every remaining warning explained), netlist matches the intended
    connections, BOM matches `docs/05_parts_list.csv`.
@@ -67,7 +67,7 @@ Use the slash commands in `.claude/commands/` — they contain the detailed chec
 | 0. Inventory | `/inventory` | `LIB_AUDIT.md`: what's in `libs/`, KiCad version, project state |
 | 1. Link libraries | `/link-libraries` | Updated lib tables, symbol Footprint fields, footprint 3D paths, `LINK_REPORT.md` |
 | 2. Missing parts | (part of phase 1) | `MISSING_PARTS.md` |
-| 3. Build schematic | `/build-schematic` | Hierarchical `.kicad_sch` files, generator script |
+| 3. Build schematic | `/build-schematic` | Single flat `.kicad_sch`, generator script |
 | 4. Check | `/check` | ERC report, netlist diff, BOM, short summary for Julien |
 
 Stop after each phase, summarize in under 15 lines, and wait for Julien's OK before the next one.
@@ -79,7 +79,9 @@ library audit clean. What's open is in `MISSING_PARTS.md` and `docs/06_open_ques
 Decisions Julien made that override the kit docs: **INA228 + ADS1015** telemetry (ACS37612
 dropped) and **Rail A = 3.3 V, Rail B = 5 V** (see `docs/01_design_spec.md`).
 
-**The schematic is generated.** `sheets/*.kicad_sch` and the root sheet are written by
+**The schematic is generated.** `EPS_Lobosat_V1.kicad_sch` is ONE flat A0 sheet (Julien doesn't
+want hierarchical sheets): each block is a dashed box with a title; same label text = same net.
+It is written by
 `scripts/gen_schematic.py`; libraries by `scripts/consolidate_libs.py`. To change a connection,
 edit `build_sheets()` in the generator and re-run, don't hand-edit the generated files, or the
 next run overwrites them. When Julien starts tidying the drawing by hand in KiCad, the
@@ -87,7 +89,7 @@ generator stops being the source of truth: ask Julien before re-running it after
 
 ```bash
 python3 scripts/consolidate_libs.py      # libs/_downloads -> EPS_Symbols / EPS_Footprints / libs/3d
-python3 scripts/gen_schematic.py         # -> EPS_Lobosat_V1.kicad_sch, sheets/, expected_nets.json
+python3 scripts/gen_schematic.py         # -> EPS_Lobosat_V1.kicad_sch, expected_nets.json
 bash scripts/fetch_datasheets.sh         # datasheets/*.pdf (gitignored)
 ```
 
@@ -98,8 +100,7 @@ bash scripts/fetch_datasheets.sh         # datasheets/*.pdf (gitignored)
 ```
 EPS_Lobosat_V1/
 ├── CLAUDE.md  README.md
-├── EPS_Lobosat_V1.kicad_pro / .kicad_sch (root, generated) / .kicad_pcb (empty)
-├── sheets/            # one generated .kicad_sch per block
+├── EPS_Lobosat_V1.kicad_pro / .kicad_sch (single flat sheet, generated) / .kicad_pcb (empty)
 ├── libs/
 │   ├── symbols/EPS_Symbols.kicad_sym         # generated, all project symbols
 │   ├── footprints/EPS_Footprints.pretty/     # generated
