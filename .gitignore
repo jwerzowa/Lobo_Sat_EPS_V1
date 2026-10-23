@@ -1,0 +1,17 @@
+# KiCad backups and caches
+*-backups/
+*.bak
+*.kicad_prl
+fp-info-cache
+\#auto_saved_files\#
+_autosave-*
+*.lck
+~*.lck
+# exports
+out/
+# macOS / editor
+.DS_Store
+# KiCad 10 local history (nested git repo managed by KiCad)
+.history/
+# Datasheets are downloaded locally (scripts/fetch_datasheets.sh), not redistributed
+datasheets/*.pdf
