@@ -21,14 +21,14 @@ subsystems: **Videography, Telemetry, Comms**. Protection is layered:
 |---|---|---|
 | `solar_input.kicad_sch` | Solar input + surge/backfeed protection | Solar connector, SMBJ15A, SS34 |
 | `charger.kicad_sch` | LT3652 charger | LT3652EMSE#PBF, inductor, STPS140ZY, CMSH3-40MA, WSL2512R0500FEA, dividers, NTC |
-| `battery.kicad_sch` | 2S2P pack on clips + protection | 4× Keystone 18650 clips, S-8252AAC, BQ29209, FS8205A, 0466, 0ZCJ, NTC |
+| `battery.kicad_sch` | 2S2P pack on clips + protection + current monitor | 4× Keystone 18650 clips, S-8252AAC, BQ29209, FS8205A, 0466, 0ZCJ, INA228 + shunt, NTC |
 | `launch_inhibit.kicad_sch` | Deployment / RBF switch | SS-5GL, AO3401A |
 | `regulation.kicad_sch` | Two rails | 2× LMZM33602RLRR |
 | `load_switches.kicad_sch` | Per-subsystem switches + output connectors | 3× TPS2553, 3× output connectors |
-| `telemetry.kicad_sch` | Power monitoring + MCU interface | ACS37612, ADS1015, dividers, I²C/GPIO connector |
+| `telemetry.kicad_sch` | Power monitoring + MCU interface | ADS1015, dividers, pull-ups, I²C/GPIO connector |
 | `heater.kicad_sch` | Optional battery heater | AO3400A, LM393, NTC, heater resistors |
 
-Root sheet `EPS_2S2P.kicad_sch` holds only the hierarchical sheet symbols and the
+Sheet files live in `sheets/`. Root sheet `EPS_Lobosat_V1.kicad_sch` holds only the hierarchical sheet symbols and the
 connections between them.
 
 ## Electrical summary
@@ -39,7 +39,7 @@ connections between them.
 | Charge float | 8.4 V | Float divider 154 kΩ / 100 kΩ (already decided) |
 | Charge current limit | Set by 50 mΩ sense resistor | WSL2512R0500FEA |
 | Charger input regulation (VIN_REG) | **TBD** | Old divider 143k/100k is for 1S and is WRONG for 2S |
-| Rail A / Rail B voltage | **TBD** | LMZM33602 feedback resistors left as TBD |
+| Rail A / Rail B voltage | **3.3 V / 5 V** | Decided 2026-10-23. FB/RT/CFF from LMZM33602 Table 7-1 |
 | Overcharge cutoff (S-8252AAC) | 4.30 V/cell | Factory-set by part suffix |
 | Over-discharge cutoff | 2.40 V/cell | Factory-set |
 | Backup OVP (BQ29209) | 4.30 V/cell | BQ29209 (NOT BQ29200 = 4.35 V) |
@@ -56,6 +56,15 @@ connections between them.
   until Julien decides.
 - Launch inhibit count depends on the launch provider. Build **one** inhibit (one SS-5GL
   + AO3401A) and leave a note.
+
+## Decisions made 2026-10-23 (supersede the kit where they differ)
+
+- **Telemetry = INA228 + ADS1015.** INA228 with a 10 mΩ shunt in the pack positive path
+  (between main fuse and PTC) measures battery current, bus voltage and charge. ADS1015 reads
+  VSOLAR, VBUS, BAT_MID and the NTC. The ACS37612 is dropped (net `I_BAT` no longer exists).
+- **Rail A = 3.3 V, Rail B = 5 V.** `VLOGIC` and `VSENSE` are simply `RAIL_A`.
+- BQ29209 OUT gets its own global net `CHG_OVP`; MCU request is `CHG_SHDN`. Each drives its own
+  N-FET pulling LT3652 SHDN low.
 
 ## Net naming convention
 

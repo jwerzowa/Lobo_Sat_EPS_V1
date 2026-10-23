@@ -11,13 +11,14 @@ Every fix applied to a vendor file is listed in PARTS below with the reason, so 
 diff from the original download is reviewable. Run from the project root:
   python3 scripts/consolidate_libs.py
 """
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from kicad_sexp import Q, parse, dump, children, child, walk, set_prop  # noqa: E402
+from kicad_sexp import Q, parse, dump, children, child, walk, set_prop, new_uuid  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DL = ROOT / "libs" / "_downloads"
@@ -43,6 +44,8 @@ PARTS = {
         src=("snapeda_symbols/LT3652EMSE_PBF.kicad_sym", "LT3652EMSE_PBF"),
         fp="MSOP-12_MSE", fp_src="snapeda_footprints/MSOP-12_MSE.kicad_mod",
         model="snapeda_3d/LT3652EMSE_PBF.step",
+        # vendor typed BAT and VFB as outputs; both are sense inputs (charge current flows in SENSE/BAT R)
+        pin_types={"BAT": "input", "VFB": "input"},
         mpn="LT3652EMSE#PBF", mfr="Analog Devices",
         ds="https://www.analog.com/media/en/technical-documentation/data-sheets/3652fe.pdf",
         desc="Solar MPPT Li-ion charger, MSOP-12 exposed pad (pin 13 = EP = GND)"),
@@ -50,6 +53,9 @@ PARTS = {
         src=("snapeda_symbols/LMZM33602RLRR.kicad_sym", "LMZM33602RLRR"),
         fp="VREG_LMZM33602RLRR", fp_src="snapeda_footprints/VREG_LMZM33602RLRR.kicad_mod",
         model="snapeda_3d/LMZM33602RLRR.step",
+        # Duplicate VOUT/SW/PGND pins (thermal-via pads) are "output"/"power_in" copies of the main
+        # pin; make them passive so ERC doesn't report output-to-output conflicts on one net.
+        pin_types={"VOUT": "power_out", "VOUT__*": "passive", "SW__*": "passive", "PGND__*": "passive"},
         mpn="LMZM33602RLRR", mfr=TI, ds=DS + "LMZM33602.pdf",
         desc="36 V 2 A buck power module, QFN-18 (pads 12/13 = DNC, no symbol pin on purpose)"),
     "S-8252AAC-M6T1U": dict(
@@ -59,6 +65,8 @@ PARTS = {
         fp="SOT236-A-PKG_MP006-A-P-SD-2.1_ABL",
         fp_src="S-8252AAZ-M6T1U/KiCADv6/footprints.pretty/SOT236-A-PKG_MP006-A-P-SD-2.1_ABL.kicad_mod",
         model=("kicad", "Package_TO_SOT_SMD.3dshapes/SOT-23-6.step"),
+        # vendor had VSS power_out (it is the negative supply input) and VM unspecified (it is a sense input)
+        pin_types={"VSS": "power_in", "VM": "input"},
         mpn="S-8252AAC-M6T1U", mfr="ABLIC", ds=DS + "S-8252.pdf",
         desc="2-cell Li-ion protection, OC 4.300 V, OD 2.400 V, SOT-23-6"),
     "BQ29209DRBR": dict(
@@ -80,6 +88,7 @@ PARTS = {
         src=("INA228AIDGSR/KiCADv6/2026-10-02_21-11-31.kicad_sym", "INA228AIDGSR"),
         fp="VSSOP10_DGS_TEX", fp_src="INA228AIDGSR/KiCADv6/footprints.pretty/VSSOP10_DGS_TEX.kicad_mod",
         model=("kicad", "Package_SO.3dshapes/MSOP-10_3x3mm_P0.5mm.step"),
+        pin_types={"GND": "power_in"},  # vendor had power_out
         mpn="INA228AIDGSR", mfr=TI, ds=DS + "INA228.pdf",
         desc="85 V 20-bit I2C power/energy/charge monitor, VSSOP-10"),
     "ADS1015IRUGR": dict(
@@ -92,6 +101,7 @@ PARTS = {
         src=("STPS140ZY/2026-09-20_06-34-23.kicad_sym", "STPS140ZY"),
         fp="SOD123_2P8X1P7_STM", fp_src="STPS140ZY/footprints.pretty/SOD123_2P8X1P7_STM.kicad_mod",
         model=("kicad", "Diode_SMD.3dshapes/D_SOD-123.step"),
+        pin_types={"K": "passive", "A": "passive"},  # vendor left them "unspecified"
         mpn="STPS140ZY", mfr="STMicroelectronics", ds="https://www.st.com/resource/en/datasheet/stps140z-y.pdf",
         desc="40 V 1 A Schottky, SOD-123 (pin 1 = K)"),
     "CMSH3-40MA": dict(
@@ -100,6 +110,7 @@ PARTS = {
         model=("kicad", "Diode_SMD.3dshapes/D_SMA.step"),
         # Vendor pins have no names. The symbol drawing puts the cathode bar on the pin 1 side.
         pin_names={"1": "K", "2": "A"},
+        pin_types={"K": "passive", "A": "passive"},  # vendor left them "unspecified"
         mpn="CMSH3-40MA TR13 PBFREE", mfr="Central Semiconductor", ds="https://www.centralsemi.com/get_document.php?cmp=1&mergetype=pd&mergepath=pd&pdf_id=CMSH3-40MA.PDF",
         desc="40 V 3 A Schottky, SMA (pin 1 = K)"),
     "SS34": dict(
@@ -218,6 +229,10 @@ def main():
             num = child(pin, "number")
             if num and str(num[1]) in p.get("pin_names", {}):
                 child(pin, "name")[1] = Q(p["pin_names"][str(num[1])])
+            nm = str(child(pin, "name")[1])
+            for pat, typ in p.get("pin_types", {}).items():
+                if nm == pat or (pat.endswith("*") and nm.startswith(pat[:-1])):
+                    pin[1] = typ
         if "ref" in p:
             set_prop(sym, "Reference", p["ref"], hide=False)
         set_prop(sym, "Value", p.get("value", name), hide=False)
@@ -254,6 +269,12 @@ def main():
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run([str(KICAD_CLI), "fp", "upgrade", "--force", str(FP_OUT)], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # `fp upgrade` gives old vendor footprints random UUIDs; make them stable so re-runs don't churn git.
+    for f in sorted(FP_OUT.glob("*.kicad_mod")):
+        n = iter(range(10**6))
+        f.write_text(re.sub(r'\(uuid "[0-9a-f-]+"\)', lambda m: f'(uuid "{new_uuid(f"{f.name}/{next(n)}")}")',
+                            f.read_text(encoding="utf-8")), encoding="utf-8")
 
     (ROOT / "sym-lib-table").write_text(
         '(sym_lib_table\n\t(version 7)\n\t(lib (name "EPS_Symbols")(type "KiCad")'

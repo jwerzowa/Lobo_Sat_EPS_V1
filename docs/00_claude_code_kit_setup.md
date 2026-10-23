@@ -4,7 +4,7 @@
 
 1. Copy **everything in this folder** into the root of your KiCad project folder (next to the
    `.kicad_pro`). If you don't have a project yet, create an empty one in KiCad called
-   `EPS_2S2P`, close KiCad, then copy this in.
+   `EPS_Lobosat_V1`, close KiCad, then copy this in.
 2. Put your downloaded parts in `libs/`:
    - `libs/symbols/` → `.kicad_sym` files
    - `libs/footprints/` → `.pretty` folders

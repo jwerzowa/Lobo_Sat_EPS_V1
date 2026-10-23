@@ -12,6 +12,7 @@ charger,R,TBD,generic,Float divider top 154 kOhm 1%,0603,1,builtin,no,
 charger,R,TBD,generic,Float divider bottom 100 kOhm 1%,0603,1,builtin,no,
 charger,R,TBD,generic,VIN_REG divider top (value TBD),0603,1,builtin,no,Old 143k is WRONG for 2S
 charger,R,TBD,generic,VIN_REG divider bottom (value TBD),0603,1,builtin,no,
+charger,Q,TBD,generic,N-FET SHDN inverters (BQ29209 OVP + MCU),SOT-23,2,builtin,no,docs/06 #9
 charger,TH,NCP18XH103F03RB,Murata,NTC 10 kOhm charge temperature,0603,1,downloaded,no,Mounted against cells
 battery,BT,TBD,Keystone Electronics,18650 battery clip/holder,per downloaded part,4,downloaded,no,Exact Keystone MPN from Julien's library
 battery,U,S-8252AAC-M6T1U,ABLIC,2-cell Li-ion protection (primary),SOT-23-6,1,downloaded,no,Do NOT substitute AAJ/AAL
@@ -20,7 +21,8 @@ battery,U,BQ29209DRBR,Texas Instruments,2-cell backup OVP + cell balancing,VSON-
 battery,F,0466-series,Littelfuse,Main hard fuse fast-acting,1206,1,downloaded,no,Rating TBD from max bus current
 battery,F,0466-series,Littelfuse,Per-cell fuse (optional),1206,4,downloaded,yes,DNP by default
 battery,F,0ZCJ0100FF2E,Bel Fuse,PTC resettable 1 A hold,1206,1,downloaded,no,Hold current may be too low; see open questions
-battery,U,ACS37612LLUALU-010B5,Allegro,Current sensor battery path,per downloaded part,1,downloaded,no,
+battery,U,INA228AIDGSR,Texas Instruments,Power/energy monitor battery path (replaces ACS37612),VSSOP-10,1,downloaded,no,I2C 0x40
+battery,R,WSL2512R0100FEA,Vishay,INA228 shunt 10 mOhm (proposed),2512,1,builtin,no,Confirm with fuse rating
 battery,TH,NCP18XH103F03RB,Murata,NTC 10 kOhm telemetry temperature,0603,1,downloaded,no,Mounted against cells
 battery,R/C,per datasheet,generic,S-8252 and BQ29209 RC filters + VM resistor + delay cap + balance resistors,0603,TBD,builtin,no,Values from datasheet typical circuit
 launch_inhibit,Q,AO3401A,Alpha & Omega,P-MOSFET bus disconnect,SOT-23,1,downloaded,no,
@@ -32,9 +34,10 @@ load_switches,U,TPS2553,Texas Instruments,Current-limited load switch,SOT-23-6,3
 load_switches,R,TBD,generic,ILIM resistor (value TBD),0603,3,builtin,no,
 load_switches,J,TBD,TBD,Subsystem output connector 2-pin,TBD,3,either,no,Videography / Telemetry / Comms
 telemetry,U,ADS1015IRUGR,Texas Instruments,4-ch 12-bit I2C ADC,X2QFN-10 (RUG),1,downloaded,no,Very small leadless package
-telemetry,R,TBD,generic,ADC voltage dividers + pull-ups,0603,TBD,builtin,no,
+telemetry,R,per schematic,generic,ADC voltage dividers + pull-ups,0603,17,builtin,no,
 telemetry,J,TBD,TBD,MCU / OBC interface connector,TBD,1,either,no,Pin order up to Claude; document it
 heater,Q,AO3400A,Alpha & Omega,N-MOSFET heater switch,SOT-23,1,downloaded,yes,
 heater,U,LM393,Texas Instruments,Dual comparator thermostat,SOIC-8,1,downloaded,yes,
 heater,TH,NCP18XH103F03RB,Murata,NTC 10 kOhm heater thermostat,0603,1,downloaded,yes,
-heater,R,TBD,generic,Heater resistors 2512,2512,TBD,builtin,yes,
+heater,R,TBD,generic,Heater resistors 2512,2512,2,builtin,yes,
+heater,D,BAT54WS,onsemi,Schottky diode-OR for heater gate,SOD-323,2,builtin,yes,Added 2026-10-23

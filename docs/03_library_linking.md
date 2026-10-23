@@ -73,5 +73,5 @@ fp-lib-table  ──► libs/footprints/EPS_Footprints.pretty/SOT-23-6.kicad_mod
 - 3D model `offset`/`rotate` from the vendor is sometimes wrong. Don't "fix" it blindly. Flag it.
 - KiCad 5-era files (`.lib`, `.dcm`, `.mod`) need converting. Ask Julien to open them once in
   KiCad's Symbol/Footprint Editor and save, or use `kicad-cli sym upgrade` / `kicad-cli fp upgrade`
-  if available in his version.
+  if available in their version.
 - Duplicate symbol names after merging libraries → rename with the full MPN.

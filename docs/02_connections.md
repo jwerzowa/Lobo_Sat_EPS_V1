@@ -1,5 +1,8 @@
 # 02 — Connections (source of truth for nets)
 
+> Implemented in `scripts/gen_schematic.py` (`build_sheets()`), which is now the exact,
+> pin-level version of this file. If the two disagree, the script is what's in the schematic.
+
 ![Battery protection topology](../images/battery_protection_topology.png)
 
 How to use this file:
@@ -27,10 +30,11 @@ How to use this file:
 | `PWR_VID`, `PWR_TLM`, `PWR_COM` | Switched subsystem outputs | load_switches |
 | `EN_VID`, `EN_TLM`, `EN_COM` | Load switch enables from MCU | load_switches, telemetry |
 | `FLT_VID_N`, `FLT_TLM_N`, `FLT_COM_N` | Load switch fault outputs (open-drain) | load_switches, telemetry |
-| `CHG_SHDN` | Charger shutdown request (from BQ29209 backup OVP and/or MCU) | battery, charger, telemetry |
+| `CHG_SHDN` | Charger shutdown request from the MCU (high = stop) | charger, telemetry |
 | `CHG_STAT_N`, `CHG_FAULT_N` | LT3652 CHRG / FAULT status (open-drain) | charger, telemetry |
-| `I_BAT` | Current sensor output (battery current) | battery, telemetry |
-| `VSENSE`, `VLOGIC` | Sensor supply / logic pull-up rail (**TBD**, derived from Rail A or B) | battery, telemetry, load_switches |
+| `INA_ALERT_N` | INA228 ALERT (open-drain) | battery, telemetry |
+| `CHG_OVP` | BQ29209 OUT, high = cell overvoltage | battery, charger |
+| `RAIL_A` as logic / sensor supply | 3.3 V. Replaces the kit's `VSENSE` / `VLOGIC` (decided 2026-10-23) | battery, telemetry, load_switches, heater |
 | `NTC_BAT` | Battery temperature NTC divider node for the ADC | battery, telemetry |
 | `I2C_SDA`, `I2C_SCL` | I²C to the MCU / OBC | telemetry |
 | `HEATER_EN` | MCU heater command | heater, telemetry |
@@ -80,7 +84,7 @@ datasheets, put it in `MISSING_PARTS.md` → "Design questions" and leave a no-c
 | 18650 clips, cell 2A and 2B **in parallel** | + → `BAT_P`, − → `BAT_MID` (top pair) |
 | Optional per-cell fuse 0466 (×4) | In series with each cell's + terminal. Mark **DNP** by default |
 | Littelfuse 0466 (main fuse) | `BAT_P` → `BAT_P_F` (local) |
-| ACS37612LLUALU-010B5 (current sensor) | Primary current path in series `BAT_P_F` → `BAT_P_S` (local). It sits in the pack path, so it sees charge AND discharge current. Output → `I_BAT`. Supply → `VSENSE` (the "B5" suffix suggests a 5 V part: verify in [DS]; rail is TBD). Bypass caps per [DS] |
+| INA228AIDGSR + 10 mΩ 2512 shunt | Shunt in series `BAT_P_F` → `BAT_P_S` (local), so it sees charge AND discharge current. IN+ = `BAT_P_F`, IN− = `BAT_P_S`, VBUS pin = `VBUS`, VS = `RAIL_A` + 0.1 µF, GND = `GND`, A0 = A1 = GND (0x40), SDA/SCL → `I2C_SDA`/`I2C_SCL`, ALERT → `INA_ALERT_N`. (Was ACS37612; changed 2026-10-23) |
 | 0ZCJ0100FF2E PTC | `BAT_P_S` → `VBUS` |
 | S-8252AAC-M6T1U | VDD → top of pack via RC filter [DS]; VC → `BAT_MID` via RC filter [DS]; VSS → `BAT_N`; DO → FET gate (discharge FET); CO → FET gate (charge FET); VM → `GND` (P−) through resistor [DS] |
 | FS8205A (dual N-FET, common drain) | Discharge FET source → `BAT_N`; charge FET source → `GND` (P−); drains tied together (internal on FS8205A); gates from DO and CO |
@@ -126,10 +130,10 @@ TPS2553 EN polarity variant (TPS2553 vs TPS2553-1) in [DS] and note which one th
 
 | Part | Connections |
 |---|---|
-| ADS1015IRUGR | AIN0 = `I_BAT`; AIN1 = `VBUS` via divider; AIN2 = `BAT_MID` via divider; AIN3 = `NTC_BAT`; ADDR per [DS] (choose default address, note it); SDA/SCL → `I2C_SDA`/`I2C_SCL`; ALERT/RDY → `ADC_ALERT_N`. **Check:** each AIN must stay ≤ ADS1015 VDD. If `I_BAT` (current-sensor output) can exceed VDD, add a divider and note the scale factor |
+| ADS1015IRUGR | AIN0 = `VSOLAR` via divider; AIN1 = `VBUS` via divider; AIN2 = `BAT_MID` via divider; AIN3 = `NTC_BAT`; ADDR = GND (0x48); SDA/SCL → `I2C_SDA`/`I2C_SCL`; ALERT/RDY → `ADC_ALERT_N`. Each AIN must stay ≤ VDD (3.3 V) |
 | Voltage dividers | Scale `VBUS` (≤8.4 V) and `BAT_MID` (≤4.2 V) below the ADC full-scale you choose. Use 0.1 % resistors if available, else 1 %. Values: choose and justify in summary |
 | MCU interface connector | `I2C_SDA`, `I2C_SCL`, `EN_VID`, `EN_TLM`, `EN_COM`, `FLT_*_N`, `CHG_STAT_N`, `CHG_FAULT_N`, `ADC_ALERT_N`, `HEATER_EN`, `CHG_SHDN` (MCU side), sensor supply, `GND`. Pin order is up to you; document it |
-| Pull-ups | On open-drain nets (`FLT_*_N`, `CHG_*_N`, `ADC_ALERT_N`) and I²C, to the logic supply. Note: logic supply voltage depends on the TBD rail voltages → use a label `VLOGIC` and list it as TBD |
+| Pull-ups | 10 k to `RAIL_A` on `FLT_*_N`, `CHG_*_N`, `ADC_ALERT_N`, `INA_ALERT_N`, `PG_RAIL_A/B`; 4.7 k on I²C |
 
 
 ## Sheet: heater (optional, all parts DNP)

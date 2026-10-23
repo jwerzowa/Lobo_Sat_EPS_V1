@@ -2,8 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(kicad-cli:*)",
+      "Bash(/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli:*)",
       "Bash(python3 scripts/*)",
       "Bash(python scripts/*)",
+      "Bash(bash scripts/fetch_datasheets.sh)",
       "Bash(git status)",
       "Bash(git diff:*)",
       "Bash(git add:*)",

@@ -15,3 +15,4 @@ out/
 .history/
 # Datasheets are downloaded locally (scripts/fetch_datasheets.sh), not redistributed
 datasheets/*.pdf
+__pycache__/

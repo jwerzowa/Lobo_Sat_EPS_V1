@@ -2,8 +2,8 @@
 """Compare a KiCad netlist (kicadsexpr) against intended connections.
 
 Usage:
-  kicad-cli sch export netlist --format kicadsexpr -o out/EPS_2S2P.net EPS_2S2P.kicad_sch
-  python3 scripts/check_netlist.py out/EPS_2S2P.net expected_nets.json
+  kicad-cli sch export netlist --format kicadsexpr -o out/EPS_Lobosat_V1.net EPS_Lobosat_V1.kicad_sch
+  python3 scripts/check_netlist.py out/EPS_Lobosat_V1.net expected_nets.json
 
 expected_nets.json: {"NET_NAME": ["REF:PIN", ...], ...}
 PIN may be the pin number ("U2:5") or the pin name/function ("U2:VC").

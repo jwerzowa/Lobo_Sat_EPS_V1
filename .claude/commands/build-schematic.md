@@ -3,7 +3,7 @@ description: Phase 3 — generate the hierarchical schematic and connect every n
 ---
 Phase 3: build the schematic. Read `docs/02_connections.md` and `docs/04_kicad_workflow.md` §2.
 
-1. Ask Julien to create a blank project in his KiCad version (or use the existing one) so you
+1. Ask Julien to create a blank project in their KiCad version (or use the existing one) so you
    have a correctly-formatted root `.kicad_sch` to copy structure from. KiCad must be closed.
 2. Write `scripts/gen_schematic.py`. It should:
    - create one sheet per block listed in `docs/01_design_spec.md`, plus the root sheet

@@ -3,7 +3,7 @@
 You are helping set up the KiCad project for the **LOBOSAT Electrical Power System (EPS)**
 redesign: a solar-charged 2S2P Li-ion board for the UNM Student Satellite Group.
 
-The owner (Julien) is an EE student. He wants to **learn from the work**, so explain what you
+The owner (Julien) is an EE student. They want to **learn from the work**, so explain what you
 changed and why in short notes, and never hide a guess.
 
 ## Your job (in priority order)
@@ -72,23 +72,41 @@ Use the slash commands in `.claude/commands/` — they contain the detailed chec
 
 Stop after each phase, summarize in under 15 lines, and wait for Julien's OK before the next one.
 
-## Expected project layout
+## Current state (2026-10-23)
+
+Phases 0–4 have been run once. ERC 0 violations, netlist matches `expected_nets.json` exactly,
+library audit clean. What's open is in `MISSING_PARTS.md` and `docs/06_open_questions.md`.
+Decisions Julien made that override the kit docs: **INA228 + ADS1015** telemetry (ACS37612
+dropped) and **Rail A = 3.3 V, Rail B = 5 V** (see `docs/01_design_spec.md`).
+
+**The schematic is generated.** `sheets/*.kicad_sch` and the root sheet are written by
+`scripts/gen_schematic.py`; libraries by `scripts/consolidate_libs.py`. To change a connection,
+edit `build_sheets()` in the generator and re-run, don't hand-edit the generated files, or the
+next run overwrites them. When Julien starts tidying the drawing by hand in KiCad, the
+generator stops being the source of truth: ask Julien before re-running it after that point.
+
+```bash
+python3 scripts/consolidate_libs.py      # libs/_downloads -> EPS_Symbols / EPS_Footprints / libs/3d
+python3 scripts/gen_schematic.py         # -> EPS_Lobosat_V1.kicad_sch, sheets/, expected_nets.json
+bash scripts/fetch_datasheets.sh         # datasheets/*.pdf (gitignored)
+```
+
+`kicad-cli` is not on PATH on Julien's Mac: use `/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli`.
+
+## Project layout
 
 ```
-EPS_2S2P/
-├── CLAUDE.md
-├── EPS_2S2P.kicad_pro / .kicad_sch / .kicad_pcb
-├── sheets/            # one .kicad_sch per block (see docs/02_connections.md)
+EPS_Lobosat_V1/
+├── CLAUDE.md  README.md
+├── EPS_Lobosat_V1.kicad_pro / .kicad_sch (root, generated) / .kicad_pcb (empty)
+├── sheets/            # one generated .kicad_sch per block
 ├── libs/
-│   ├── symbols/       # *.kicad_sym  (downloaded parts, one lib per part is fine)
-│   ├── footprints/    # *.pretty folders
-│   └── 3d/            # *.step / *.wrl
-├── sym-lib-table      # project-local, ${KIPRJMOD}/libs/symbols/...
-├── fp-lib-table       # project-local, ${KIPRJMOD}/libs/footprints/...
+│   ├── symbols/EPS_Symbols.kicad_sym         # generated, all project symbols
+│   ├── footprints/EPS_Footprints.pretty/     # generated
+│   ├── 3d/                                   # STEP models referenced by the footprints
+│   └── _downloads/                           # vendor downloads, never edited
+├── sym-lib-table  fp-lib-table               # ${KIPRJMOD} paths only
 ├── docs/  images/  scripts/  templates/  datasheets/
-├── LIB_AUDIT.md  LINK_REPORT.md  MISSING_PARTS.md   # you create these
-└── out/               # ERC/netlist/BOM exports (gitignored)
+├── LINK_REPORT.md  MISSING_PARTS.md  expected_nets.json
+└── out/               # ERC / netlist / BOM / PDF exports (gitignored)
 ```
-
-If Julien's downloaded parts are somewhere else (e.g. a `Downloads` folder of SnapEDA /
-Ultra Librarian / SamacSys zips), ask where, then copy/extract them into `libs/` first.

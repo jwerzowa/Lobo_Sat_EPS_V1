@@ -421,8 +421,40 @@
   },
   "sheets": [
     [
-      "cbddb6e5-a3fb-4e26-abfc-2f478ed7914b",
+      "33a1c195-c8eb-5cad-8fd7-090f01dfd3f6",
       "Root"
+    ],
+    [
+      "0c426173-9626-520c-a4f9-12fa84e1f08b",
+      "solar_input"
+    ],
+    [
+      "81e9a981-8752-57d3-8a9f-544ebe999776",
+      "charger"
+    ],
+    [
+      "72cb0232-e205-5794-8de3-9ed609cd9f98",
+      "battery"
+    ],
+    [
+      "f2d6e52a-5628-5f73-9f86-08645eb944d7",
+      "launch_inhibit"
+    ],
+    [
+      "fd395813-36f1-5a25-ad2f-1791c053f472",
+      "regulation"
+    ],
+    [
+      "0f209134-9865-5066-b719-a80b79e6b00d",
+      "load_switches"
+    ],
+    [
+      "d9f488c9-b931-54f2-abdb-a26fe35a6ec3",
+      "telemetry"
+    ],
+    [
+      "afba6d38-9767-5abe-b61e-011988073c99",
+      "heater"
     ]
   ],
   "text_variables": {},

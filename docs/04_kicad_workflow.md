@@ -23,19 +23,19 @@ mkdir -p out
 python3 scripts/audit_libs.py --project . --parts docs/05_parts_list.csv --out LINK_REPORT.md
 
 # File is valid + connectivity (if this fails, the schematic file is malformed)
-kicad-cli sch export netlist --format kicadsexpr -o out/EPS_2S2P.net EPS_2S2P.kicad_sch
+kicad-cli sch export netlist --format kicadsexpr -o out/EPS_Lobosat_V1.net EPS_Lobosat_V1.kicad_sch
 
 # ERC (KiCad 8+). Add --format json if your version supports it.
-kicad-cli sch erc --severity-all -o out/erc.rpt EPS_2S2P.kicad_sch
+kicad-cli sch erc --severity-all -o out/erc.rpt EPS_Lobosat_V1.kicad_sch
 
 # Netlist vs intended connections (this kit's script)
-python3 scripts/check_netlist.py out/EPS_2S2P.net expected_nets.json
+python3 scripts/check_netlist.py out/EPS_Lobosat_V1.net expected_nets.json
 
 # BOM (KiCad 8+)
-kicad-cli sch export bom -o out/bom.csv EPS_2S2P.kicad_sch
+kicad-cli sch export bom -o out/bom.csv EPS_Lobosat_V1.kicad_sch
 
 # PDF for Julien to review visually
-kicad-cli sch export pdf -o out/EPS_2S2P.pdf EPS_2S2P.kicad_sch
+kicad-cli sch export pdf -o out/EPS_Lobosat_V1.pdf EPS_Lobosat_V1.kicad_sch
 ```
 
 Run `--help` on any subcommand if a flag is rejected: flags changed between versions.
@@ -81,7 +81,7 @@ coordinate math in one function.
   shows as missing/garbled.
 - Every symbol, wire, label, sheet has a unique `uuid`.
 - Hierarchical instance data: each placed symbol carries
-  `(instances (project "EPS_2S2P" (path "/<root-uuid>/<sheet-uuid>" (reference "U3") (unit 1))))`.
+  `(instances (project "EPS_Lobosat_V1" (path "/<root-uuid>/<sheet-uuid>" (reference "U3") (unit 1))))`.
   Sheet symbols in the root carry their own instance/page data. Wrong paths = references show
   as `U?` or duplicate.
 - Reference designators must be unique across the whole hierarchy. Assign them in the
