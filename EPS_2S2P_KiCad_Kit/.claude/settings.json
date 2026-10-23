@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kicad-cli:*)",
+      "Bash(python3 scripts/*)",
+      "Bash(python scripts/*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git log:*)",
+      "Bash(mkdir:*)",
+      "Bash(ls:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)"
+    ]
+  }
+}
