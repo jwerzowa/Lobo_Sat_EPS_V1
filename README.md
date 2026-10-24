@@ -43,6 +43,7 @@ The full list of open questions is in `docs/06_open_questions.md`; missing parts
 - Rails fixed at **3.3 V (A)** and **5 V (B)**; LMZM33602 feedback, frequency and capacitor values taken from datasheet Table 7-1.
 - **Battery heater dropped.** J701 pin 17 (was HEATER_EN) is now a spare pin.
 - Schematic is a **single sheet** instead of separate hierarchical sheets.
+- Small resistors and capacitors are **0805** (easier to hand-solder). Bulk caps stay 1206/1210, shunts 2512.
 
 **Bugs fixed from the old schematic**
 - The **SMBJ15A TVS was reversed** (cathode on GND). It would have conducted and shorted the solar panel. Now cathode → panel +.
@@ -78,15 +79,15 @@ Exported from the schematic: `BOM.csv` (62 line items, 121 parts). Generic passi
 | BT303 | 1 | 18650 cell 2A | TBD (Keystone 1042?) | Keystone Electronics | BatteryHolder_Keystone_1042_1x18650 |
 | BT304 | 1 | 18650 cell 2B | TBD (Keystone 1042?) | Keystone Electronics | BatteryHolder_Keystone_1042_1x18650 |
 | C201 | 1 | 10uF 50V X7R | generic | generic | C_1210_3225Metric |
-| C202 | 1 | TBD | generic | generic | C_0603_1608Metric |
-| C203 | 1 | 0.1uF 25V X7R | generic | generic | C_0603_1608Metric |
+| C202 | 1 | TBD | generic | generic | C_0805_2012Metric |
+| C203 | 1 | 0.1uF 25V X7R | generic | generic | C_0805_2012Metric |
 | C204 | 1 | 10uF 25V X7R | generic | generic | C_1206_3216Metric |
-| C301-C306,C601,C603,C605,C701-C705 | 14 | 0.1uF | generic | generic | C_0603_1608Metric |
-| C307 | 1 | 0.33uF | generic | generic | C_0603_1608Metric |
-| C501 | 1 | 150pF | generic | generic | C_0603_1608Metric |
+| C301-C306,C601,C603,C605,C701-C705 | 14 | 0.1uF | generic | generic | C_0805_2012Metric |
+| C307 | 1 | 0.33uF | generic | generic | C_0805_2012Metric |
+| C501 | 1 | 150pF | generic | generic | C_0805_2012Metric |
 | C502,C503,C515,C516 | 4 | 4.7uF 50V X7R | generic | generic | C_1210_3225Metric |
 | C504-C507,C518-C521 | 8 | 22uF 25V X7R | generic | generic | C_1210_3225Metric |
-| C517 | 1 | 100pF | generic | generic | C_0603_1608Metric |
+| C517 | 1 | 100pF | generic | generic | C_0805_2012Metric |
 | C602,C604,C606 | 3 | 10uF 16V X7R | generic | generic | C_1206_3216Metric |
 | D101 | 1 | SMBJ15A | SMBJ15A | Littelfuse | DIOM4336X265N |
 | D102 | 1 | SS34 | SS34 | onsemi | DIOM7959X265N |
@@ -103,29 +104,29 @@ Exported from the schematic: `BOM.csv` (62 line items, 121 parts). Generic passi
 | Q201,Q202 | 2 | TBD | TBD | TBD | SOT-23 |
 | Q301 | 1 | FS8205A | FS8205A | Fortune Semiconductor | SOP65P640X120-8N |
 | Q401 | 1 | AO3401A | AO3401A | Alpha & Omega | SOT-23 |
-| R201-R203,R601,R603,R605 | 6 | TBD | generic | generic | R_0603_1608Metric |
-| R204 | 1 | 1k | generic | generic | R_0603_1608Metric |
-| R205,R206,R401,R602,R604,R606 | 6 | 100k | generic | generic | R_0603_1608Metric |
-| R207 | 1 | 154k 1% | generic | generic | R_0603_1608Metric |
-| R208 | 1 | 100k 1% | generic | generic | R_0603_1608Metric |
+| R201-R203,R601,R603,R605 | 6 | TBD | generic | generic | R_0805_2012Metric |
+| R204 | 1 | 1k | generic | generic | R_0805_2012Metric |
+| R205,R206,R401,R602,R604,R606 | 6 | 100k | generic | generic | R_0805_2012Metric |
+| R207 | 1 | 154k 1% | generic | generic | R_0805_2012Metric |
+| R208 | 1 | 100k 1% | generic | generic | R_0805_2012Metric |
 | R209 | 1 | 50m 1% | WSL2512R0500FEA | Vishay Dale | R_2512_6332Metric |
 | R301 | 1 | 10m 1% | WSL2512R0100FEA | Vishay Dale | R_2512_6332Metric |
-| R302,R303 | 2 | 470 | generic | generic | R_0603_1608Metric |
-| R304 | 1 | 2k | generic | generic | R_0603_1608Metric |
-| R305 | 1 | 160 | generic | generic | R_0603_1608Metric |
-| R306 | 1 | 261 1% | generic | generic | R_0603_1608Metric |
-| R307,R308 | 2 | 100 | generic | generic | R_0603_1608Metric |
-| R309,R503,R509 | 3 | 10k 1% | generic | generic | R_0603_1608Metric |
-| R501 | 1 | 133k 1% | generic | generic | R_0603_1608Metric |
-| R502 | 1 | 23.2k 1% | generic | generic | R_0603_1608Metric |
-| R507 | 1 | 40.2k 1% | generic | generic | R_0603_1608Metric |
-| R508 | 1 | 88.7k 1% | generic | generic | R_0603_1608Metric |
-| R701 | 1 | 330k 0.1% | generic | generic | R_0603_1608Metric |
-| R702 | 1 | 47k 0.1% | generic | generic | R_0603_1608Metric |
-| R703 | 1 | 200k 0.1% | generic | generic | R_0603_1608Metric |
-| R704-R706 | 3 | 100k 0.1% | generic | generic | R_0603_1608Metric |
-| R707-R715 | 9 | 10k | generic | generic | R_0603_1608Metric |
-| R716,R717 | 2 | 4.7k | generic | generic | R_0603_1608Metric |
+| R302,R303 | 2 | 470 | generic | generic | R_0805_2012Metric |
+| R304 | 1 | 2k | generic | generic | R_0805_2012Metric |
+| R305 | 1 | 160 | generic | generic | R_0805_2012Metric |
+| R306 | 1 | 261 1% | generic | generic | R_0805_2012Metric |
+| R307,R308 | 2 | 100 | generic | generic | R_0805_2012Metric |
+| R309,R503,R509 | 3 | 10k 1% | generic | generic | R_0805_2012Metric |
+| R501 | 1 | 133k 1% | generic | generic | R_0805_2012Metric |
+| R502 | 1 | 23.2k 1% | generic | generic | R_0805_2012Metric |
+| R507 | 1 | 40.2k 1% | generic | generic | R_0805_2012Metric |
+| R508 | 1 | 88.7k 1% | generic | generic | R_0805_2012Metric |
+| R701 | 1 | 330k 0.1% | generic | generic | R_0805_2012Metric |
+| R702 | 1 | 47k 0.1% | generic | generic | R_0805_2012Metric |
+| R703 | 1 | 200k 0.1% | generic | generic | R_0805_2012Metric |
+| R704-R706 | 3 | 100k 0.1% | generic | generic | R_0805_2012Metric |
+| R707-R715 | 9 | 10k | generic | generic | R_0805_2012Metric |
+| R716,R717 | 2 | 4.7k | generic | generic | R_0805_2012Metric |
 | SW401 | 1 | SS-5GL | SS-5GL | Omron | — (missing) |
 | TH201,TH301 | 2 | 10k NTC | NCP18XH103F03RB | Murata | THRMC1608X95N |
 | U201 | 1 | LT3652EMSE#PBF | LT3652EMSE#PBF | Analog Devices | MSOP-12_MSE |
