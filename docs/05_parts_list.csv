@@ -36,8 +36,3 @@ load_switches,J,TBD,TBD,Subsystem output connector 2-pin,TBD,3,either,no,Videogr
 telemetry,U,ADS1015IRUGR,Texas Instruments,4-ch 12-bit I2C ADC,X2QFN-10 (RUG),1,downloaded,no,Very small leadless package
 telemetry,R,per schematic,generic,ADC voltage dividers + pull-ups,0603,17,builtin,no,
 telemetry,J,TBD,TBD,MCU / OBC interface connector,TBD,1,either,no,Pin order up to Claude; document it
-heater,Q,AO3400A,Alpha & Omega,N-MOSFET heater switch,SOT-23,1,downloaded,yes,
-heater,U,LM393,Texas Instruments,Dual comparator thermostat,SOIC-8,1,downloaded,yes,
-heater,TH,NCP18XH103F03RB,Murata,NTC 10 kOhm heater thermostat,0603,1,downloaded,yes,
-heater,R,TBD,generic,Heater resistors 2512,2512,2,builtin,yes,
-heater,D,BAT54WS,onsemi,Schottky diode-OR for heater gate,SOD-323,2,builtin,yes,Added 2026-10-23

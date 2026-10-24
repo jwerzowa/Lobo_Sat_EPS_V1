@@ -136,7 +136,7 @@ TPS2553 EN polarity variant (TPS2553 vs TPS2553-1) in [DS] and note which one th
 | Pull-ups | 10 k to `RAIL_A` on `FLT_*_N`, `CHG_*_N`, `ADC_ALERT_N`, `INA_ALERT_N`, `PG_RAIL_A/B`; 4.7 k on I²C |
 
 
-## Sheet: heater (optional, all parts DNP)
+## Sheet: heater — DROPPED 2026-10-24 (kept for reference, not in the schematic)
 
 | Part | Connections |
 |---|---|

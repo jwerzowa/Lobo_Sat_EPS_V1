@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# RETIRED 2026-10-24: the schematic is now edited by hand in KiCad. Running this would
+# OVERWRITE EPS_Lobosat_V1.kicad_sch. Kept for reference (how the first version was built).
 """Generate the hierarchical LOBOSAT EPS schematic from the tables in this file.
 
     python3 scripts/gen_schematic.py          # writes EPS_Lobosat_V1.kicad_sch (one flat sheet)
@@ -19,10 +21,10 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from kicad_sexp import Q, parse, dump, children, child, prop, fmt, new_uuid  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 PROJECT = "EPS_Lobosat_V1"
 KICAD_SYM = Path("/Applications/KiCad/KiCad.app/Contents/SharedSupport/symbols")
 LIB_FILES = {"EPS_Symbols": ROOT / "libs/symbols/EPS_Symbols.kicad_sym"}

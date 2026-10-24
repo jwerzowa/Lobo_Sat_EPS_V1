@@ -10,7 +10,7 @@ Julien decides these.
 | 3 | VIN_REG divider values | Charger | Depends on #2. Old 143k/100k is for 1S |
 | 4 | Main fuse rating and PTC hold current | Battery protection | 0ZCJ0100 (1 A hold) may be too low for the bus |
 | 5 | TPS2553 current limits (ILIM resistors) | Load switches | Depends on each subsystem's peak current |
-| 6 | Heater fitted or not | Heater sheet (all DNP for now) | Depends on mission thermal environment |
+| 6 | ~~Heater fitted or not~~ **Decided 2026-10-24: no heater.** | — | Removed from the schematic |
 | 7 | Number of launch inhibits | Launch inhibit | Set by the launch provider's interface document |
 | 8 | Connector types (solar in, outputs, MCU interface) | J parts | Not chosen; use generic Conn_01xNN placeholders |
 | 9 | BQ29209 OUT → LT3652 SHDN inverter part | Charger / battery | Small N-FET or NPN; Julien to approve the part |

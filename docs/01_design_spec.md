@@ -26,7 +26,6 @@ subsystems: **Videography, Telemetry, Comms**. Protection is layered:
 | `regulation.kicad_sch` | Two rails | 2× LMZM33602RLRR |
 | `load_switches.kicad_sch` | Per-subsystem switches + output connectors | 3× TPS2553, 3× output connectors |
 | `telemetry.kicad_sch` | Power monitoring + MCU interface | ADS1015, dividers, pull-ups, I²C/GPIO connector |
-| `heater.kicad_sch` | Optional battery heater | AO3400A, LM393, NTC, heater resistors |
 
 **Single flat sheet (Julien's preference, 2026-10-23):** all blocks are on `EPS_Lobosat_V1.kicad_sch`, one dashed box per block. The table above lists blocks, not files. (Kit text, superseded: root sheet holds only the hierarchical sheet symbols and the
 connections between them.
@@ -52,8 +51,7 @@ connections between them.
 - Cells mount in **Keystone 18650 clips** on the EPS board. No battery connector.
 - The ground of everything downstream of the protection is **P−** (net `GND`). The cell
   negative before the FETs is a separate net `BAT_N`. Do not merge them.
-- Heater block is **optional**: build the sheet, but put `DNP` (do not populate) on its parts
-  until Julien decides.
+- Heater block: **dropped** (decided 2026-10-24).
 - Launch inhibit count depends on the launch provider. Build **one** inhibit (one SS-5GL
   + AO3401A) and leave a note.
 

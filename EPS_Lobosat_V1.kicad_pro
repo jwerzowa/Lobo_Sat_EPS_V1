@@ -416,12 +416,12 @@
         "uuid": "cbddb6e5-a3fb-4e26-abfc-2f478ed7914b"
       }
     ],
-    "used_designators": "L1-3,CR1-3,BT1-4,U1-10,#PWR1-17,D1-4,Q1-2,C1-9,R1-21,RT1-2",
+    "used_designators": "L1-3,#FLG120-122,CR1-3,BT1-4,U1-10,U503,#PWR1-17,#PWR75-80,#PWR117-118,#PWR159,D1-4,Q1-2,C1-9,C205,C515-522,R1-21,R507-511,RT1-2",
     "variants": []
   },
   "sheets": [
     [
-      "33a1c195-c8eb-5cad-8fd7-090f01dfd3f6",
+      "cbddb6e5-a3fb-4e26-abfc-2f478ed7914b",
       "Root"
     ]
   ],
